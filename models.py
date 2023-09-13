@@ -61,8 +61,8 @@ class Net(nn.Module):
         #dense 2
         self.fc2 = nn.Linear(1000, 1000)
 
-        #fully connected with output 2
-        self.fc3 = nn.Linear(1000, 2)
+        #fully connected with output 68*2
+        self.fc3 = nn.Linear(1000, 68*2)
 
         
     def forward(self, x):
@@ -91,15 +91,15 @@ class Net(nn.Module):
         #flat
         x = x.view(x.size(0), -1)
 
-        x = F.relu(self.fc1(x))
+        x = F.elu(self.fc1(x))
 
         x = self.fc_drop(x)
 
-        x = F.relu(self.fc2(x))
+        x = F.elu(self.fc2(x))
 
         x = self.fc_drop(x)
 
-        x = F.relu(self.fc3(x))
-        
+        x = torch.tanh(self.fc3(x))
+
         # a modified x, having gone through all the layers of your model, should be returned
         return x
